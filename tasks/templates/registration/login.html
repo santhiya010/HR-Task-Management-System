@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #70889b, #425769);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding-top: 70px;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .navbar .brand {
+            font-size: 20px;
+            font-weight: 600;
+            color: #FFEB99;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #fff;
+            margin-left: 15px;
+            font-weight: 500;
+        }
+
+        .navbar a:hover {
+            color: #FFD369;
+        }
+
+        /* LOGIN BOX */
+        .container {
+            width: 90%;
+            max-width: 380px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .company-name {
+            text-align: center;
+            font-size: 26px;
+            font-weight: 600;
+            color: #FFEEAD;
+        }
+
+        .hr-name {
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 20px;
+            color: #D0E8F2;
+        }
+
+        h2 {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0 15px;
+            border-radius: 8px;
+            border: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #FFD369;
+            color: #333;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+        }
+
+        button:hover {
+            background: #FFB740;
+        }
+
+        /* ------------------ MEDIA QUERIES ------------------ */
+        @media (max-width: 480px) {
+            body {
+                padding-top: 50px;
+            }
+
+            .navbar {
+                flex-direction: column;
+                padding: 10px;
+            }
+
+            .navbar a {
+                margin: 5px 0;
+            }
+
+            .container {
+                padding: 20px;
+                max-width: 300px;
+            }
+
+            .company-name {
+                font-size: 22px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="brand">Skysolstice Tech</div>
+
+    <div>
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'logout' %}">Logout</a>
+
+        <!-- Show Admin only when HR logs in -->
+        {% if request.user.is_authenticated and request.user.profile.role == 'hr' %}
+            <a href="/admin/">Admin</a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- LOGIN FORM BOX -->
+<div class="container">
+    <div class="company-name">Skysolstice Tech</div>
+    <div class="hr-name">HR: Santhiya</div>
+
+    <h2>Employee Login</h2>
+
+    <form method="post" autocomplete="off">
+        {% csrf_token %}
+        <input type="text" name="username" class="form-control" autocomplete="off" placeholder="Username">
+
+        <input type="password" name="password" class="form-control" autocomplete="new-password" placeholder="Password">
+
+        <button type="submit">Login</button>
+    </form>
+</div>
+
+</body>
+</html>
+

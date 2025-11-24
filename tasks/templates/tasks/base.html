@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HR Task Management</title>
+    <style>
+        :root {
+            --primary: #4A90E2;
+            --success: #28a745;
+            --danger: #dc3545;
+            --muted: #6c757d;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f0f2f5;
+        }
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+        main {
+            padding: 30px;
+        }
+        .badge {
+            padding: 5px 10px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .prio-low { background: green; }
+        .prio-med { background: orange; }
+        .prio-high { background: red; }
+        .completed-task {
+            opacity: 0.6;
+        }
+        button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #357ABD;
+        }
+        .task {
+            background: white;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        form {
+            margin: 0;
+        }
+
+        /* ------------------ MEDIA QUERIES ------------------ */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 15px;
+            }
+            header div {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 10px;
+            }
+            main {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 10px;
+            }
+            header a, header span {
+                font-size: 14px;
+            }
+            main {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div><strong>HR Task Management</strong></div>
+
+    <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+        {% if user.is_authenticated %}
+
+            <!-- HR LINKS -->
+            {% if user.role == "HR" %}
+                <a href="{% url 'hr_dashboard' %}">Dashboard</a>
+                <a href="{% url 'create_task' %}">Create Task</a>
+            {% endif %}
+
+            <!-- EMPLOYEE LINKS -->
+            {% if user.role == "EMPLOYEE" %}
+                <a href="{% url 'employee_tasks' %}">My Tasks</a>
+            {% endif %}
+
+            <!-- COMMON LINKS -->
+            <span style="color:white; font-weight:bold;">{{ user.username }}</span>
+            <a href="{% url 'logout' %}" style="color:white;">Logout</a>
+
+        {% else %}
+            <a href="{% url 'login' %}" style="color:white;">Login</a>
+        {% endif %}
+    </div>
+</header>
+<main>
+    {% block content %}{% endblock %}
+</main>
+</body>
+</html>
+

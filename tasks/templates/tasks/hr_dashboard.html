@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Dashboard</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #9fb4d3;
+            padding: 20px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .company-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: #34495E;
+        }
+
+        .btn-add {
+            background: #27ae60;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn-add:hover {
+            background: #1e874b;
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        /* Summary Cards */
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            margin: 0;
+            color: #555;
+            font-size: 16px;
+        }
+
+        .card p {
+            margin-top: 10px;
+            font-size: 28px;
+            font-weight: 700;
+            color: #2C3E50;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: #34495E;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .status-completed {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: #c0392b;
+            font-weight: bold;
+        }
+
+        /* ------------------ MEDIA QUERIES ------------------ */
+        @media (max-width: 768px) {
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .topbar-right {
+                flex-wrap: wrap;
+            }
+            .card-container {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 12px;
+            }
+            table {
+                font-size: 14px;
+            }
+            th, td {
+                padding: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            .company-name {
+                font-size: 20px;
+            }
+            .btn-add, .logout-btn {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+            .card p {
+                font-size: 22px;
+            }
+            table {
+                font-size: 12px;
+            }
+            th, td {
+                padding: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="company-name">Skysolstice Tech – HR Dashboard</div>
+
+    <div class="topbar-right">
+
+        <a href="{% url 'create_task' %}" class="btn-add">+ Add Task</a>
+
+        <!-- LOGOUT BUTTON (POST METHOD) -->
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
+
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="card-container">
+    <div class="card">
+        <h3>Total Tasks</h3>
+        <p>{{ total_tasks }}</p>
+    </div>
+    <div class="card">
+        <h3>Completed</h3>
+        <p>{{ completed_tasks }}</p>
+    </div>
+    <div class="card">
+        <h3>Pending</h3>
+        <p>{{ pending_tasks }}</p>
+    </div>
+</div>
+
+<!-- Task Table -->
+<table>
+    <tr>
+        <th>Employee</th>
+        <th>Task</th>
+        <th>Deadline</th>
+        <th>Status</th>
+    </tr>
+
+    {% for task in tasks %}
+    <tr>
+        <td>{{ task.assigned_to }}</td>
+        <td>{{ task.title }}</td>
+        <td>{{ task.deadline }}</td>
+        <td>
+            {% if task.completed %}
+                <span class="status-completed">Completed</span>
+            {% else %}
+                <span class="status-pending">Pending</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4" style="text-align:center; padding:20px;">No tasks added yet.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>
+
